@@ -1,5 +1,7 @@
 package main
 
+// todo: PrintMan(): read readme.md 作為預設的 man 輸出
+
 import (
 	"encoding/json"
 	"errors"
