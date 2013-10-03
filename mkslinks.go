@@ -1,6 +1,7 @@
 package main
 
 // todo: PrintMan(): read readme.md 作為預設的 man 輸出
+// test case
 
 import (
 	"encoding/json"
@@ -11,6 +12,8 @@ import (
 	"os/exec"
 	"path/filepath"
 )
+
+var version = "0.9"
 
 type SLinksCreateInfo struct {
 	fileNames []string
@@ -71,6 +74,7 @@ func GetSymbolicLinkDefineJsonPath() string {
 }
 
 func PrintMan() {
+	fmt.Println("version: ", version)
 	fmt.Println("Usage: mkslink <define_file_path>")
 }
 
@@ -88,7 +92,7 @@ func NewSLinksCreateInfoFromJsonPath(jsonPath string) (*SLinksCreateInfo, error)
 		fileNames = append(fileNames, fnameInterface.(string))
 	}
 
-	fromPath := mapFromJson["fromPath"].(string)
+	fromPath := filepath.Dir(jsonPath)
 	toPath := mapFromJson["toPath"].(string)
 
 	sLinksCreateInfo := SLinksCreateInfo{fileNames, fromPath, toPath}

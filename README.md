@@ -1,7 +1,7 @@
 mkslinks
 ========
 
-ver 0.8
+ver 0.9
 
 batch make symolic links by json format file
 developed by Go
