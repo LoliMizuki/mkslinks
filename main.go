@@ -93,7 +93,7 @@ func makeSymbolicLinksWithSetInfo(linksSetInfo *LinksSetInfo) (issueMessage stri
 
 		if isPathExist(linksSetInfo.destPath) == false {
 			if err := os.Mkdir(linksSetInfo.destPath, os.ModeDir|os.ModePerm); err != nil {
-				return "error", errors.New("cna not make dest dir " + linksSetInfo.destPath)
+				return "error", errors.New("can not make dest dir " + linksSetInfo.destPath)
 			}
 		}
 
