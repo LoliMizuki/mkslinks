@@ -2,7 +2,7 @@
     "test1": {
         "path_type": "absolute",
         "from_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/mkslinks/testcases/from1",
-        "from_path_children": ["folder/xup4XtrDgPY.gif", "MZClass.h", "MZClass.m", "xup4XtrDgPY.gif"],
+        "from_path_children": ["folder/xup4XtrDgPY.gif", "MZClass.h", "MZClass.m"],
         "dest_path": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/mkslinks/testcases/to1"
     },
     

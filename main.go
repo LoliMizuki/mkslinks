@@ -10,20 +10,20 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 var version = "1.00"
 
 func main() {
-	jsonDir, jsonFileName, hasFile := jsonDirAndFileNameFromArgs()
-	if hasFile == false {
+	jsonPath, pathsPairAction, showMan := jsonPathAndActionFromArgs()
+	if showMan {
 		printMan()
 		return
 	}
 
-	if message, err := makeLinksFromJsonPath(jsonDir + "/" + jsonFileName); err != nil {
+	if message, err := applyPathsPairActionToJsonPath(pathsPairAction, jsonPath); err != nil {
 		fmt.Println(err)
 	} else {
 		if len(message) > 0 {
@@ -32,13 +32,16 @@ func main() {
 	}
 }
 
-func jsonDirAndFileNameFromArgs() (dir, fileName string, hasFile bool) {
-	if len(os.Args) < 2 {
-		return "", "", false
+func jsonPathAndActionFromArgs() (jsonPath string, pathsPairAction PathsPairAction, showMan bool) {
+	if len(os.Args) < 3 {
+		return "", nil, true
 	}
 
-	filePath := os.Args[1]
-	return filepath.Dir(filePath), filepath.Base(filePath), true
+	pathsPairAction = pathsPairActionFromString(os.Args[1])
+	jsonPath = os.Args[2]
+	showMan = false
+
+	return
 }
 
 func printMan() {
@@ -46,7 +49,20 @@ func printMan() {
 	fmt.Println("Usage: mkslink <define_file_path>")
 }
 
-func makeLinksFromJsonPath(jsonPath string) (message string, err error) {
+func pathsPairActionFromString(arg string) PathsPairAction {
+	switch strings.ToLower(arg) {
+	case "-sl":
+		return makeSymbolicLinkToPathsPair
+	case "-c":
+		return makeCopyToPathsPair
+	}
+
+	fmt.Println("unknow arg to make action, must be \"-sl(symbolic link)\" or \"-c(copy)\", but you are", arg)
+	os.Exit(1)
+	return nil
+}
+
+func applyPathsPairActionToJsonPath(pathsPairAction PathsPairAction, jsonPath string) (message string, err error) {
 	if isPathExist(jsonPath) == false {
 		return "error", errors.New("can not found json file: " + jsonPath)
 	}
@@ -67,7 +83,7 @@ func makeLinksFromJsonPath(jsonPath string) (message string, err error) {
 
 	for key, value := range linksInfoSetMap {
 		linksSetInfo := newLinksSetInfoFromInterface(key, absDir, value.(map[string]interface{}))
-		issueMessage, err := makeSymbolicLinksWithSetInfo(&linksSetInfo)
+		issueMessage, err := applyPathsPairActionToSetInfo(pathsPairAction, &linksSetInfo)
 		if err != nil {
 			message += err.Error()
 		}
@@ -78,16 +94,15 @@ func makeLinksFromJsonPath(jsonPath string) (message string, err error) {
 	return message, nil
 }
 
-func makeSymbolicLinksWithSetInfo(linksSetInfo *LinksSetInfo) (issueMessage string, err error) {
+func applyPathsPairActionToSetInfo(pathsPairAction PathsPairAction, linksSetInfo *LinksSetInfo) (issueMessage string, err error) {
 	if linksSetInfo == nil {
 		return "error", errors.New("linksSetInfo is nil")
 	}
 
-	for _, fromPathChild := range linksSetInfo.fromPathChildren {
-		fromFullPath := linksSetInfo.fromPathParent + "/" + fromPathChild
-
-		if isPathExist(fromFullPath) == false {
-			issueMessage += fmt.Sprintf("source path: '%s' is not existed\n", fromFullPath)
+	for _, srcPathChild := range linksSetInfo.fromPathChildren {
+		srcFullPath := linksSetInfo.fromPathParent + "/" + srcPathChild
+		if isPathExist(srcFullPath) == false {
+			issueMessage += fmt.Sprintf("source path: '%s' is not existed\n", srcFullPath)
 			continue
 		}
 
@@ -97,14 +112,13 @@ func makeSymbolicLinksWithSetInfo(linksSetInfo *LinksSetInfo) (issueMessage stri
 			}
 		}
 
-		cmd := exec.Command("ln", "-s", fromFullPath, linksSetInfo.destPath)
-		output, err := cmd.Output()
+		output, err := pathsPairAction(linksSetInfo.fromPathParent, srcPathChild, linksSetInfo.destPath)
 		if err != nil {
 			return "error", err
-		} else {
-			if output != nil && len(output) > 0 {
-				issueMessage += string(output) + "\n"
-			}
+		}
+
+		if len(output) > 0 {
+			issueMessage += string(output) + "\n"
 		}
 	}
 
