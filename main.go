@@ -1,7 +1,3 @@
-// test flow
-// 1. call mkslinks with test json files
-// 2. check file is exist?
-
 package main
 
 import (
@@ -14,7 +10,7 @@ import (
 	"strings"
 )
 
-var version = "1.00"
+var version = "1.5"
 
 func main() {
 	jsonPath, pathsPairAction, showMan := jsonPathAndActionFromArgs()
@@ -46,7 +42,7 @@ func jsonPathAndActionFromArgs() (jsonPath string, pathsPairAction PathsPairActi
 
 func printMan() {
 	fmt.Println("version: ", version)
-	fmt.Println("Usage: mkslink <define_file_path>")
+	fmt.Println("Usage: path2pathAction [-sl|-c] <define_file_path>")
 }
 
 func pathsPairActionFromString(arg string) PathsPairAction {
@@ -82,8 +78,8 @@ func applyPathsPairActionToJsonPath(pathsPairAction PathsPairAction, jsonPath st
 	absDir = filepath.Dir(absDir)
 
 	for key, value := range linksInfoSetMap {
-		linksSetInfo := newLinksSetInfoFromInterface(key, absDir, value.(map[string]interface{}))
-		issueMessage, err := applyPathsPairActionToSetInfo(pathsPairAction, &linksSetInfo)
+		pathsPairSetInfo := newPathsPairSetInfoFromInterface(key, absDir, value.(map[string]interface{}))
+		issueMessage, err := applyPathsPairActionToSetInfo(pathsPairAction, &pathsPairSetInfo)
 		if err != nil {
 			message += err.Error()
 		}
@@ -94,25 +90,27 @@ func applyPathsPairActionToJsonPath(pathsPairAction PathsPairAction, jsonPath st
 	return message, nil
 }
 
-func applyPathsPairActionToSetInfo(pathsPairAction PathsPairAction, linksSetInfo *LinksSetInfo) (issueMessage string, err error) {
-	if linksSetInfo == nil {
-		return "error", errors.New("linksSetInfo is nil")
+func applyPathsPairActionToSetInfo(
+	pathsPairAction PathsPairAction,
+	pathsPairSetInfo *PathsPairSetInfo) (issueMessage string, err error) {
+	if pathsPairSetInfo == nil {
+		return "error", errors.New("pathsPairSetInfo is nil")
 	}
 
-	for _, srcPathChild := range linksSetInfo.fromPathChildren {
-		srcFullPath := linksSetInfo.fromPathParent + "/" + srcPathChild
+	for _, srcPathChild := range pathsPairSetInfo.srcPathChildren {
+		srcFullPath := pathsPairSetInfo.srcPathParent + "/" + srcPathChild
 		if isPathExist(srcFullPath) == false {
 			issueMessage += fmt.Sprintf("source path: '%s' is not existed\n", srcFullPath)
 			continue
 		}
 
-		if isPathExist(linksSetInfo.destPath) == false {
-			if err := os.Mkdir(linksSetInfo.destPath, os.ModeDir|os.ModePerm); err != nil {
-				return "error", errors.New("can not make dest dir " + linksSetInfo.destPath)
+		if isPathExist(pathsPairSetInfo.destPath) == false {
+			if err := os.Mkdir(pathsPairSetInfo.destPath, os.ModeDir|os.ModePerm); err != nil {
+				return "error", errors.New("can not make dest dir " + pathsPairSetInfo.destPath)
 			}
 		}
 
-		output, err := pathsPairAction(linksSetInfo.fromPathParent, srcPathChild, linksSetInfo.destPath)
+		output, err := pathsPairAction(pathsPairSetInfo.srcPathParent, srcPathChild, pathsPairSetInfo.destPath)
 		if err != nil {
 			return "error", err
 		}

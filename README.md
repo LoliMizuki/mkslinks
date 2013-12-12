@@ -1,17 +1,19 @@
-mkslinks
+path2pathAction
 ========
 
-ver 0.9
+ver 10.
 
-batch make symolic links by json format file
-developed by Go
+batch make symolic links or copy by json format file define.
+developed by Go.
 
-usage: mkslinks &lt;file_path&gt;
+usage: path2pathAction [-sl | -c] &lt;file_path&gt;
 
 define "file" and "source files" must be at THE SAME DIRECTIORY.
 
+```json
     json format:
     {
         "files": ["file1", "file2", ... ],
         "toPath": &lt;target_path&gt;
     }
+```

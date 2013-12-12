@@ -1,0 +1,1 @@
+/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from1/MZClass.m
