@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var version = "1.5"
+var version = "20131212"
 
 func main() {
 	jsonPath, pathsPairAction, showMan := jsonPathAndActionFromArgs()
@@ -91,8 +91,7 @@ func applyPathsPairActionToJsonPath(pathsPairAction PathsPairAction, jsonPath st
 }
 
 func applyPathsPairActionToSetInfo(
-	pathsPairAction PathsPairAction,
-	pathsPairSetInfo *PathsPairSetInfo) (issueMessage string, err error) {
+	pathsPairAction PathsPairAction, pathsPairSetInfo *PathsPairSetInfo) (issueMessage string, err error) {
 	if pathsPairSetInfo == nil {
 		return "error", errors.New("pathsPairSetInfo is nil")
 	}
@@ -110,7 +109,7 @@ func applyPathsPairActionToSetInfo(
 			}
 		}
 
-		output, err := pathsPairAction(pathsPairSetInfo.srcPathParent, srcPathChild, pathsPairSetInfo.destPath)
+		output, err := pathsPairAction(srcFullPath, pathsPairSetInfo.destPath)
 		if err != nil {
 			return "error", err
 		}

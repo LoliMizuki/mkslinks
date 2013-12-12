@@ -1,36 +1,29 @@
 {
     "test1": {
         "path_type": "absolute",
-        "from_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from1",
-        "from_path_children": ["folder/xup4XtrDgPY.gif", "MZClass.h", "MZClass.m"],
+        "src_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from1",
+        "src_path_children": ["folder/xup4XtrDgPY.gif", "MZClass.h", "MZClass.m"],
         "dest_path": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/to1"
     },
     
     "test2": {
         "path_type": "a",
-        "from_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from2",
-        "from_path_children": ["235inf.png", "2828171.jpg", "hello.c"],
+        "src_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from2",
+        "src_path_children": ["235inf.png", "2828171.jpg", "hello.c"],
         "dest_path": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/to2"
     },
     
     "test_relative1": {
         "path_type": "rel",
-        "from_path_parent": "relativefrom",
-        "from_path_children": ["Iffem_shut-up-and-take-my-money.jpg", "tumblr_msjvd3AL4X1qzdo3to1_500.jpg"],
-        "dest_path": "relativeto"
-    },
-    
-    "test_relative2": {
-        "path_type": "rel",
-        "from_path_parent": "relativefrom",
-        "from_path_children": ["Iffem_shut-up-and-take-my-money.jpg", "tumblr_msjvd3AL4X1qzdo3to1_500.jpg"],
-        "dest_path": "../relativeto2"
+        "src_path_parent": "relativefrom",
+        "src_path_children": ["Iffem_shut-up-and-take-my-money.jpg", "tumblr_msjvd3AL4X1qzdo3to1_500.jpg"],
+        "dest_path": "relativeto1"
     },
     
     "test_for_no_from_source": {
         "path_type": "absolute",
-        "from_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from_not_exist",
-        "from_path_children": ["235inf.png", "2828171.jpg", "hello.c", "MZClass.h", "MZClass.m", "xup4XtrDgPY.gif"],
+        "src_path_parent": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/from_not_exist",
+        "src_path_children": ["235inf.png", "2828171.jpg", "hello.c", "MZClass.h", "MZClass.m", "xup4XtrDgPY.gif"],
         "dest_path": "/Users/inabamizuki/gocode/src/github.com/lolimizuki/path2pathAction/testcases/toXXX"
     }
 }

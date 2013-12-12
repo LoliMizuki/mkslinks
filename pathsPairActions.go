@@ -4,13 +4,12 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
-type PathsPairAction func(srcParent, srcChild, dstPath string) (output string, err error)
+type PathsPairAction func(srcPath, dstPath string) (output string, err error)
 
-func makeSymbolicLinkToPathsPair(srcParent, srcChild, dstPath string) (output string, err error) {
-	srcPath := srcParent + "/" + srcChild
-
+func makeSymbolicLinkToPathsPair(srcPath, dstPath string) (output string, err error) {
 	cmd := exec.Command("ln", "-s", srcPath, dstPath)
 	outputBytes, err := cmd.Output()
 	if err != nil {
@@ -20,16 +19,15 @@ func makeSymbolicLinkToPathsPair(srcParent, srcChild, dstPath string) (output st
 	return string(outputBytes), nil
 }
 
-func makeCopyToPathsPair(srcParent, srcChild, dstPath string) (output string, err error) {
-	srcPath := srcParent + "/" + srcChild
-	dstFullPath := dstPath + "/" + srcChild
+func makeCopyToPathsPair(srcPath, dstPath string) (output string, err error) {
+	dstPathIncludeFileName := dstPath + "/" + filepath.Base(srcPath)
 
 	reader, err := ioutil.ReadFile(srcPath)
 	if err != nil {
 		return "error", err
 	}
 
-	if err = ioutil.WriteFile(dstFullPath, reader, os.ModePerm); err != nil {
+	if err = ioutil.WriteFile(dstPathIncludeFileName, reader, os.ModePerm); err != nil {
 		return "error", err
 	}
 

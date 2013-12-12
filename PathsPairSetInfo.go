@@ -21,8 +21,7 @@ type PathsPairSetInfo struct {
 }
 
 func newPathsPairSetInfoFromInterface(
-	key, absDir string,
-	rawInterface map[string]interface{}) (pathsPairSetInfo PathsPairSetInfo) {
+	key, absDir string, rawInterface map[string]interface{}) (pathsPairSetInfo PathsPairSetInfo) {
 	pathsPairSetInfo.pathType = func() PathType {
 		pathTypeStr := rawInterface["path_type"].(string)
 		switch strings.ToLower(pathTypeStr) {
@@ -39,7 +38,7 @@ func newPathsPairSetInfoFromInterface(
 
 	pathsPairSetInfo.destPath = rawInterface["dest_path"].(string)
 
-	pathsPairSetInfo.srcPathParent = rawInterface["from_path_parent"].(string)
+	pathsPairSetInfo.srcPathParent = rawInterface["src_path_parent"].(string)
 
 	if pathsPairSetInfo.pathType == kPathType_Relative {
 		pathsPairSetInfo.destPath = absDir + "/" + pathsPairSetInfo.destPath
@@ -47,7 +46,7 @@ func newPathsPairSetInfoFromInterface(
 	}
 
 	pathsPairSetInfo.srcPathChildren = func() (srcPathChildren []string) {
-		for _, pathInterface := range rawInterface["from_path_children"].([]interface{}) {
+		for _, pathInterface := range rawInterface["src_path_children"].([]interface{}) {
 			srcPathChildren = append(srcPathChildren, pathInterface.(string))
 		}
 
