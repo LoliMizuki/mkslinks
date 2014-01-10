@@ -3,7 +3,7 @@ path2pathAction
 
 ver.20131212
 
-Batch make symolic links or copy depneded on json format file define.
+Batch make symbolic links or copy depneded on define in json file.
 developed by Go.
 
 usage: path2pathAction [`-sl`|`-c`] &lt;file_path&gt;
